@@ -74,7 +74,7 @@ public class ExpenseService : IExpenseService
 
         return true;
     }
-    
+
     public async Task<IEnumerable<ExpenseResponseDto>> GetByMonthAsync(int mes, int ano)
     {
         var expenses = await _context.Expenses
@@ -83,5 +83,20 @@ public class ExpenseService : IExpenseService
 
         return _mapper.Map<IEnumerable<ExpenseResponseDto>>(expenses);
     }
+
+    public async Task<MonthlyTotalResponseDto> GetMonthlyTotalAsync(int mes, int ano)
+    {
+        var total = await _context.Expenses
+            .Where(e => e.Date.Month == mes && e.Date.Year == ano)
+            .SumAsync(e => (decimal?)e.Amount) ?? 0;
+
+        return new MonthlyTotalResponseDto
+        {
+            Mes = mes,
+            Ano = ano,
+            Total = total
+        };
+    }
+
 
 }

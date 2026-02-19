@@ -90,6 +90,21 @@ public class ExpensesController : ControllerBase
         return Ok(expenses);
     }
 
+    // GET: api/expenses/total-mensal?mes=2&ano=2026
+    [HttpGet("total-mensal")]
+    public async Task<ActionResult<MonthlyTotalResponseDto>> GetMonthlyTotal(
+        [FromQuery] int mes,
+        [FromQuery] int ano)
+    {
+        if (mes < 1 || mes > 12)
+            return BadRequest("Mês deve estar entre 1 e 12.");
+
+        var result = await _service.GetMonthlyTotalAsync(mes, ano);
+
+        return Ok(result);
+    }
+
+
 
 
 }
