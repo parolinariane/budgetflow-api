@@ -2,31 +2,29 @@ using Microsoft.EntityFrameworkCore;
 using BudgetFlow.API.Data;
 using BudgetFlow.API.DTOs;
 using BudgetFlow.API.Models;
+using AutoMapper;
+
 
 namespace BudgetFlow.API.Services;
 
 public class ExpenseService : IExpenseService
 {
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public ExpenseService(AppDbContext context)
+    public ExpenseService(AppDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
+
 
     public async Task<IEnumerable<ExpenseResponseDto>> GetAllAsync()
     {
         var expenses = await _context.Expenses.ToListAsync();
-
-        return expenses.Select(e => new ExpenseResponseDto
-        {
-            Id = e.Id,
-            Title = e.Title,
-            Category = e.Category,
-            Amount = e.Amount,
-            Date = e.Date
-        });
+        return _mapper.Map<IEnumerable<ExpenseResponseDto>>(expenses);
     }
+
 
     public async Task<ExpenseResponseDto?> GetByIdAsync(int id)
     {
@@ -35,38 +33,20 @@ public class ExpenseService : IExpenseService
         if (expense == null)
             return null;
 
-        return new ExpenseResponseDto
-        {
-            Id = expense.Id,
-            Title = expense.Title,
-            Category = expense.Category,
-            Amount = expense.Amount,
-            Date = expense.Date
-        };
+        return _mapper.Map<ExpenseResponseDto>(expense);
     }
+
 
     public async Task<ExpenseResponseDto> CreateAsync(CreateExpenseDto dto)
     {
-        var expense = new Expense
-        {
-            Title = dto.Title,
-            Category = dto.Category,
-            Amount = dto.Amount,
-            Date = dto.Date
-        };
+        var expense = _mapper.Map<Expense>(dto);
 
         _context.Expenses.Add(expense);
         await _context.SaveChangesAsync();
 
-        return new ExpenseResponseDto
-        {
-            Id = expense.Id,
-            Title = expense.Title,
-            Category = expense.Category,
-            Amount = expense.Amount,
-            Date = expense.Date
-        };
+        return _mapper.Map<ExpenseResponseDto>(expense);
     }
+
 
     public async Task<bool> UpdateAsync(int id, UpdateExpenseDto dto)
     {
@@ -75,14 +55,12 @@ public class ExpenseService : IExpenseService
         if (expense == null)
             return false;
 
-        expense.Title = dto.Title;
-        expense.Category = dto.Category;
-        expense.Amount = dto.Amount;
-        expense.Date = dto.Date;
+        _mapper.Map(dto, expense);
 
         await _context.SaveChangesAsync();
         return true;
     }
+
 
     public async Task<bool> DeleteAsync(int id)
     {

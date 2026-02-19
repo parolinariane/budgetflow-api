@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddAutoMapper(typeof(Program));
+
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>

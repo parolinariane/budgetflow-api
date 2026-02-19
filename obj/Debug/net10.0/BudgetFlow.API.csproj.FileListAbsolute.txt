@@ -188,3 +188,5 @@ C:\Users\Samsung\Documents\Ariane Parolin\Projetos\BudgetFlow.API\bin\Debug\net1
 C:\Users\Samsung\Documents\Ariane Parolin\Projetos\BudgetFlow.API\bin\Debug\net10.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\Samsung\Documents\Ariane Parolin\Projetos\BudgetFlow.API\bin\Debug\net10.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Samsung\Documents\Ariane Parolin\Projetos\BudgetFlow.API\bin\Debug\net10.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\Samsung\Documents\Ariane Parolin\Projetos\BudgetFlow.API\bin\Debug\net10.0\AutoMapper.dll
+C:\Users\Samsung\Documents\Ariane Parolin\Projetos\BudgetFlow.API\bin\Debug\net10.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
