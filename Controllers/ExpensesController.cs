@@ -76,5 +76,20 @@ public class ExpensesController : ControllerBase
         return NoContent();
     }
 
+    // GET: api/expenses/por-mes?mes=2&ano=2026
+    [HttpGet("por-mes")]
+    public async Task<ActionResult<IEnumerable<ExpenseResponseDto>>> GetByMonth(
+        [FromQuery] int mes,
+        [FromQuery] int ano)
+    {
+        if (mes < 1 || mes > 12)
+            return BadRequest("Mês deve estar entre 1 e 12.");
+
+        var expenses = await _service.GetByMonthAsync(mes, ano);
+
+        return Ok(expenses);
+    }
+
+
 
 }

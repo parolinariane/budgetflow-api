@@ -74,4 +74,14 @@ public class ExpenseService : IExpenseService
 
         return true;
     }
+    
+    public async Task<IEnumerable<ExpenseResponseDto>> GetByMonthAsync(int mes, int ano)
+    {
+        var expenses = await _context.Expenses
+            .Where(e => e.Date.Month == mes && e.Date.Year == ano)
+            .ToListAsync();
+
+        return _mapper.Map<IEnumerable<ExpenseResponseDto>>(expenses);
+    }
+
 }
