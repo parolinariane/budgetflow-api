@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BudgetFlow.API.Data;
 using BudgetFlow.API.Models;
+using BudgetFlow.API.DTOs;
+using BudgetFlow.API.Services;
+
 
 namespace BudgetFlow.API.Controllers;
 
@@ -9,54 +12,69 @@ namespace BudgetFlow.API.Controllers;
 [Route("api/[controller]")]
 public class ExpensesController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IExpenseService _service;
 
-    public ExpensesController(AppDbContext context)
+    public ExpensesController(IExpenseService service)
     {
-        _context = context;
+        _service = service;
     }
+
 
     // GET: api/expenses
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
+    public async Task<ActionResult<IEnumerable<ExpenseResponseDto>>> GetExpenses()
     {
-        return await _context.Expenses.ToListAsync();
+        var expenses = await _service.GetAllAsync();
+        return Ok(expenses);
     }
 
     // GET: api/expenses/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Expense>> GetExpense(int id)
+    public async Task<ActionResult<ExpenseResponseDto>> GetExpense(int id)
     {
-        var expense = await _context.Expenses.FindAsync(id);
+        var expense = await _service.GetByIdAsync(id);
 
         if (expense == null)
             return NotFound();
 
-        return expense;
+        return Ok(expense);
     }
+
 
     // POST: api/expenses
     [HttpPost]
-    public async Task<ActionResult<Expense>> CreateExpense(Expense expense)
+    public async Task<ActionResult<ExpenseResponseDto>> CreateExpense(CreateExpenseDto dto)
     {
-        _context.Expenses.Add(expense);
-        await _context.SaveChangesAsync();
+        var expense = await _service.CreateAsync(dto);
 
         return CreatedAtAction(nameof(GetExpense), new { id = expense.Id }, expense);
     }
+
 
     // DELETE: api/expenses/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteExpense(int id)
     {
-        var expense = await _context.Expenses.FindAsync(id);
+        var deleted = await _service.DeleteAsync(id);
 
-        if (expense == null)
+        if (!deleted)
             return NotFound();
-
-        _context.Expenses.Remove(expense);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }
+
+
+    // PUT: api/expenses/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateExpense(int id, UpdateExpenseDto dto)
+    {
+        var updated = await _service.UpdateAsync(id, dto);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
+
+
 }
