@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IMonthlyLimitService, MonthlyLimitService>();
-
+builder.Services.AddScoped<IMonthlySummaryService, MonthlySummaryService>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
